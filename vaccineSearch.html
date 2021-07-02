@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Oswald:400,700">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+	<style>
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+	
+	body {
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		background-color: #f1f1f1;
+		line-height: 1.7;
+		color: #323330;
+	}
+	
+	a {
+		text-decoration: none;
+		color: #f2bb13;
+	}
+	
+	a:hover {
+		text-decoration: underline;
+	}
+	
+	.container {
+		display: flex;
+		flex-direction: row;
+	}
+	
+	.container h2 {
+		font-size: 1.2rem;
+		font-weight: normal;
+	}
+	
+	.container .user {
+		background-color: #fff;
+		padding: 2rem;
+		border: solid 1px #ccd0d4;
+		border-radius: 0.3rem;
+		text-align: center;
+		margin: 1rem;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+	}
+	
+	.container img {
+		border-radius: 50%;
+		padding: 1rem;
+		background-color: #f4f4f4;
+	}
+	
+	@media(max-width:560px) {
+		.container {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+	 html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        body {
+            margin-bottom: 60px;
+            background: #D3E1E4;
+        }
+
+		
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            /* Set the fixed height of the footer here */
+            line-height: 60px;
+            /* Vertically center the text there */
+            background-color: #f5f5f5;
+        }
+	</style>
+	<script>
+	async function GetVaccination(type) {
+		var date = new Date();
+		var finalDate = date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
+		var url = new URL('https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=670645&date=02-07-2021');
+		var search_params = url.searchParams;
+		// new value of "id" is set to "101"
+		var pinCode = document.getElementById("pincode").value;
+		search_params.set('pincode', pinCode);
+		search_params.set('date', finalDate);
+		url.search = search_params.toString();
+		// the new url string
+		var new_url = url.toString();
+		if(type == 1) {
+			Find18(new_url);
+		} else Find40(new_url);
+	}
+	async function Find18(url) {
+		var response = await fetch(url);
+		let data = await response.json();
+		var centerr = data.centers;
+		let html = '';
+		for(const center of data.centers) {
+			for(const session of center.sessions) {
+				if(session.min_age_limit == 18 && session.available_capacity > 0) {
+					let htmlSegment = `<div class="user">
+  <ul class="list-group">
+      <a href="#" class="list-group-item active">${session.date}</a>
+    <li class="list-group-item">${center.address}<span class="badge success" style="background-color:#ff1313">  Available : ${session.available_capacity}</span></li>
+  </ul></div>`;
+					html += htmlSegment;
+				}
+			}
+		};
+		let container = document.querySelector('.available');
+		container.innerHTML = html;
+	};
+	async function Find40(url) {
+		var response = await fetch(url);
+		let data = await response.json();
+		var centerr = data.centers;
+		let html = '';
+		for(const center of data.centers) {
+			for(const session of center.sessions) {
+				if(session.min_age_limit == 40 && session.available_capacity > 0) {
+					let htmlSegment = `<div class="user">
+  <ul class="list-group">
+      <a href="#" class="list-group-item active">${session.date}</a>
+    <li class="list-group-item">${center.address}<span class="badge success" style="background-color:#ff1313">  Available : ${session.available_capacity}</span></li>
+  </ul></div>`;
+					html += htmlSegment;
+				}
+			}
+		};
+		let container = document.querySelector('.available');
+		container.innerHTML = html;
+	}
+	</script>
+	
+<body style="background-image: url(https://image.freepik.com/free-vector/abstract-medical-background-with-flat-icons-symbols-template-design-with-concept-idea-healthcare-technology-innovation-medicine-health-science-research_120542-503.jpg);background-size: cover;
+    background-repeat: no-repeat;">
+	<div class="container mb-5" style="place-content: center;">
+		<div class="form-group">
+			<h1 style="text-align: center;color: white;">Vaccine Search</h1>
+			<input id="pincode" type="text" class="form-control" value="670645" />
+			<button onclick="GetVaccination(1)" class="btn btn-success form-control" style="margin-top:15px">Find 18+ Vaccination Centers</button>
+			<button onclick="GetVaccination(2)" class="btn btn-warning form-control" style="margin-top:15px">Find 40+ Vaccination Centers</button>
+			<div class="available"></div>
+		</div>
+	</div>
+	</div>
+	<footer class="footer" style ="background-color: white;">
+        <div class="container" style="text-align: center;text-align: center;place-content: center;">
+            <span class="text-muted"><span style="color:red">&#10084;</span> Social responsibility Initiative by <a
+                    href="https://www.linkedin.com/in/rizwan-ebrahim-3b1b2612a?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAB_YsLUBI6uY2MsGqNuoUumGCE_tAa5Pml8&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3BaFpR3XUpQKW5q1cQslvi0w%3D%3D" style="color:red;"> Rizwan</a>
+            </span></br>
+        </div>
+    </footer>
+</body>
+
+</html>
