@@ -89,7 +89,8 @@
 	<script>
 	async function GetVaccination(type) {
 		var date = new Date();
-		var finalDate = date.getDate() + "-" + date.getMonth()+1 + "-" + date.getFullYear();
+		var month = date.getMonth()+1;
+		var finalDate = date.getDate() + "-" + month + "-" + date.getFullYear();
 		var url = new URL('https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=670645&date=02-07-2021');
 		var search_params = url.searchParams;
 		// new value of "id" is set to "101"
