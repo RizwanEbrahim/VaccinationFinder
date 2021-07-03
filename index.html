@@ -301,12 +301,14 @@
 		let data = await response.json();
 		var centerr = data.centers;
 		let html = '';
+		play();
 		for(const center of data.centers) 
 		{
 			for(const session of center.sessions) 
 			{
 				if(session.min_age_limit == 40 && session.available_capacity_dose1 > 0) 
 				{
+					play();
 					let htmlSegment = `<div class="user">
   <ul class="list-group">
       <a href="#" class="list-group-item active">${session.date}</a>
@@ -325,7 +327,10 @@
 		}
 		container.innerHTML = html;
 	}
-
+	function play() {
+        var audio = new Audio('alert.mp3');
+        audio.play();
+    }
 	</script>
 	
 <body style="background-image: url(https://image.freepik.com/free-vector/abstract-medical-background-with-flat-icons-symbols-template-design-with-concept-idea-healthcare-technology-innovation-medicine-health-science-research_120542-503.jpg);">
