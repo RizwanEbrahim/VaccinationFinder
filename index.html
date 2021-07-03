@@ -250,7 +250,6 @@
 	</style>
 	<script>
 	async function GetVaccination(type) {
-
 		var date = new Date();
 		var month = date.getMonth()+1;
 		var finalDate = date.getDate() + "-" + month + "-" + date.getFullYear();
@@ -278,6 +277,7 @@
 			{
 				if(session.min_age_limit == 18 && session.available_capacity > 0) 
 				{
+					play();
 					let htmlSegment = `<div class="user">
   <ul class="list-group">
       <a href="#" class="list-group-item active" style="
@@ -302,7 +302,7 @@
 		let data = await response.json();
 		var centerr = data.centers;
 		let html = '';
-		play();
+	
 		for(const center of data.centers) 
 		{
 			for(const session of center.sessions) 
