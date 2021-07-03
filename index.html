@@ -195,7 +195,7 @@
     text-decoration: none;
     margin-right: 30px;
     transition: all .3s;
-    height: auto;
+    height: 38px;
     cursor: pointer;
     position: relative;
     outline: none;
@@ -217,7 +217,7 @@
     right: 0;
     /* background: red; */
     /* z-index: -1; */
-    height: 40px;
+    height:38px;;
     top: -10px;
 }
 
@@ -336,21 +336,22 @@
 				<img src="vaccine.jpg" alt="Covid vaccine finder" class="img-responsive" />
 			</div>
 			<h1 style="text-align: center;color: #1d4e8c;font-family: serif">Vaccine Search</h1>
-			<input id="pincode" type="text" class="form-control"  placeholder="Pin Code"/>
+			<input id="pincode" type="text" class="form-control"  placeholder="Pin Code" style="margin-bottom: 15px;
+			"/>
 			<div class="row">
 				<div class="col-sd-6">
-			<button type="button" class="btn_choose_sent bg_btn_chose_1" style="margin:15px;background-color:#29a747">
+			<button type="button" class="btn btn_choose_sent bg_btn_chose_1" style="margin:15px;background-color:#29a747">
 				<input id ="eightn" type="radio" name="name" checked />Age 18-40
 			</button>
 		       </div>
 			   <div class="col-sd-6">
-			<button type="button" class="btn_choose_sent bg_btn_chose_2" style="margin:15px;background-color:#ffc107;">
+			<button type="button" class="btn btn_choose_sent bg_btn_chose_2" style="margin:15px;background-color:#ffc107;">
 				<input id="frty" type="radio" name="name" />Age 40-45
 			</button>
 		    </div>
 			</div>
 	
-			<button onclick="GetVaccination()" class="btn btn-success form-control" style="margin-top:15px;background-color:#1d5c8e;border:#1d5c8e"> <i class="fa fa-search"></i>  Find Vaccination Centers</button>
+			<button onclick="GetVaccination()" class="btn btn form-control" style="margin-top:15px;color:white;background-color:#1d5c8e;border:#1d5c8e"> <i class="fa fa-search"></i>  Find Vaccination Centers</button>
 			<div class="available">
 			
 			</div>
