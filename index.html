@@ -280,8 +280,9 @@
 				{
 					let htmlSegment = `<div class="user">
   <ul class="list-group">
-      <a href="#" class="list-group-item active">${session.date}</a>
-    <li class="list-group-item">${center.name}<span class="badge success" style="background-color:#ff1313">  Available : ${session.available_capacity}</span></li>
+      <a href="#" class="list-group-item active" style="
+    background-color: #1d5c8e;">${session.date}</a>
+    <li class="list-group-item">${center.name }<span class="badge success" style="background-color:#007bff6b">  Dose 1 : ${session.available_capacity_dose1}</span> <span class="badge success" style="background-color:#007bff6b">  Dose 2 : ${session.available_capacity_dose2}</span></li>
   </ul></div>`;
 					html += htmlSegment;
 				}
@@ -306,13 +307,14 @@
 		{
 			for(const session of center.sessions) 
 			{
-				if(session.min_age_limit == 40 && session.available_capacity_dose1 > 0) 
+				if(session.min_age_limit == 40 && session.available_capacity > 0) 
 				{
 					play();
 					let htmlSegment = `<div class="user">
   <ul class="list-group">
-      <a href="#" class="list-group-item active">${session.date}</a>
-    <li class="list-group-item">${center.name}<span class="badge success" style="background-color:#ff1313">  Available : ${session.available_capacity_dose1}</span></li>
+      <a href="#" class="list-group-item active" style="
+    background-color: #1d5c8e;">${session.date}</a>
+    <li class="list-group-item">${center.name}<span class="badge success" style="background-color:#007bff6b">  Dose 1 : ${session.available_capacity_dose1}</span> <span class="badge success" style="background-color:#007bff6b">  Dose 2 : ${session.available_capacity_dose2}</span></li>
   </ul></div>`;
 					html += htmlSegment;
 				}
