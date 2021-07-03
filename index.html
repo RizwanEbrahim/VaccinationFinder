@@ -150,7 +150,7 @@
   vertical-align: middle;
   box-shadow: hsla(0,0%,100%,.15) 0 1px 1px, inset hsla(0,0%,0%,.5) 0 0 0 1px;
   background-color: hsla(0,0%,0%,.2);
-      background-image: -webkit-radial-gradient( #fff 0%, #fff 15%, #fff 28%, #fff 70% );
+      background-image: -webkit-radial-gradient( rgb(209, 19, 19) 0%, rgb(209, 19, 19) 15%, rgb(209, 19, 19) 28%, rgb(209, 19, 19) 70% );
   background-repeat: no-repeat;
   -webkit-transition: background-position .15s cubic-bezier(.8, 0, 1, 1),
     -webkit-transform .25s cubic-bezier(.8, 0, 1, 1);
@@ -247,9 +247,78 @@
     position: relative;
     outline: none;
 }
+.containerr {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.containerr input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.containerr:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.containerr input:checked ~ .checkmark {
+  background-color: #212529;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  background-color: #212529;
+}
+
+/* Show the checkmark when checked */
+.containerr input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.containerr .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
 	</style>
 	<script>
-	async function GetVaccination(type) {
+	var attemptCount = 1;
+    var myInterval;
+	async function GetVaccination() {
+		let availabilityFound = false;
 		var date = new Date();
 		var month = date.getMonth()+1;
 		var finalDate = date.getDate() + "-" + month + "-" + date.getFullYear();
@@ -277,7 +346,8 @@
 			{
 				if(session.min_age_limit == 18 && session.available_capacity > 0) 
 				{
-					play();
+                            play();
+                            document.getElementById("alert").style = "display:none";
 					let htmlSegment = `<div class="user">
   <ul class="list-group">
       <a href="#" class="list-group-item active" style="
@@ -291,10 +361,19 @@
 		let container = document.querySelector('.available');
 		if(html=='')
 		{
+			if(document.getElementById("auto").checked)
+			{
+                            setTimer();
+                            document.getElementById("alert").style = "display:block";
+            }
+			else
+			{
+				document.getElementById("alert").style = "display:none"
 			var x = document.getElementById("snackbar");
   x.className = "show";
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 		}
+	}
 		container.innerHTML = html;
 	};
 	async function Find40(url) {
@@ -323,15 +402,42 @@
 		let container = document.querySelector('.available');
 		if(html=='')
 		{
+			if(document.getElementById("auto").checked)
+			{
+                            setTimer();
+                            document.getElementById("alert").style = "display:block";
+            }
+			else
+			{
+				document.getElementById("alert").style = "display:none"
 			var x = document.getElementById("snackbar");
   x.className = "show";
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 		}
-		container.innerHTML = html;
+	   }
 	}
 	function play() {
         var audio = new Audio('alert.mp3');
         audio.play();
+    }
+	function setTimer() {
+        document.getElementById("attemptCount").innerHTML = attemptCount;
+        var maxTicks = 60;
+        var tickCount = 0;
+        var tick = function () {
+            if (tickCount >= maxTicks) {
+                clearInterval(myInterval);
+                GetVaccination();
+
+                attemptCount++;
+                document.getElementById("attemptCount").innerHTML = attemptCount;
+                return;
+            }
+            document.getElementById("timer").innerHTML = (maxTicks - tickCount);
+            tickCount++;
+        };
+
+        myInterval = setInterval(tick, 1000);
     }
 	</script>
 	
@@ -357,10 +463,24 @@
 			</button>
 		    </div>
 			</div>
-	
+			<label class="containerr"> <i class="fa fa-cogs"></i> Automate
+				<input type="checkbox" id="auto"  data-original-title="tooltip here">
+				<span class="checkmark" style="margin-top: 5px;"></span>
+			</label>
 			<button onclick="GetVaccination()" class="btn btn form-control" style="margin-top:15px;color:white;background-color:#1d5c8e;border:#1d5c8e"> <i class="fa fa-search"></i>  Find Vaccination Centers</button>
 			<div class="available">
 			
+			</div>
+		
+			<div id="alert" class="alert alert-primary alert-notify" role="alert" style="display: none;">
+				<div class="row alert-texter">
+					<div class="col"> Not Available!
+						<br />
+						Retrying in <span id="timer"></span>s<br />
+					</div>
+					<div class="col"><span class="float-right">Attempt Count: <span id="attemptCount"></span> </span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
