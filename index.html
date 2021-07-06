@@ -365,8 +365,7 @@
 			for(const session of center.sessions) 
 			{
 				if(session.min_age_limit == 18 && session.available_capacity > 0) 
-				{
-                            play();
+				{                       
                             document.getElementById("alert").style = "display:none";
 					let htmlSegment = `<div class="user">
   <ul class="list-group">
@@ -397,6 +396,10 @@
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 		}
 	}
+  else
+  {  
+    play();
+  }
 		container.innerHTML = html;
 	};
 	async function Find40(url) {
@@ -411,7 +414,6 @@
 			{
 				if(session.min_age_limit == 40 && session.available_capacity > 0) 
 				{
-					play();
 					let htmlSegment = `<div class="user">
   <ul class="list-group">
       <a href="#" class="list-group-item active" style="
@@ -440,7 +442,11 @@
   x.className = "show";
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 		}
-	   }
+    }
+  else
+  {  
+    play();
+  }
 	}
 
 	function play() {
