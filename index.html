@@ -315,26 +315,46 @@
 }
 	</style>
 	<script>
+      $(function () {
+        GetDistricts();
+    })
+
 	var attemptCount = 1;
     var myInterval;
 	async function GetVaccination() {
+    var finalUrl;
 		let availabilityFound = false;
 		var date = new Date();
 		var month = date.getMonth()+1;
 		var finalDate = date.getDate() + "-" + month + "-" + date.getFullYear();
+    if(document.getElementById("district").selectedIndex >-1)
+    {
+      var url = new URL('https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=299&date=06-07-2021');
+      var search_params = url.searchParams;
+		// new value of "id" is set to "101"
+		var district_id = document.getElementById("district").value;
+		search_params.set('district_id', district_id);
+    search_params.set('date', finalDate);
+		url.search = search_params.toString();
+    finalUrl = url.toString();
+    }
+    else
+    {
 		var url = new URL('https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=670645&date=02-07-2021');
 		var search_params = url.searchParams;
 		// new value of "id" is set to "101"
 		var pinCode = document.getElementById("pincode").value;
 		search_params.set('pincode', pinCode);
-		search_params.set('date', finalDate);
+    search_params.set('date', finalDate);
 		url.search = search_params.toString();
 		// the new url string
-		var new_url = url.toString();
-		var eighteenChecked = document.getElementById("eightn").checked;
+	  finalUrl = url.toString();
+    }
+
+    var eighteenChecked = document.getElementById("eightn").checked;
 		if(eighteenChecked) {
-			Find18(new_url);
-		} else Find40(new_url);
+			Find18(finalUrl);
+		} else Find40(finalUrl);
 	}
 	async function Find18(url) {
 		var response = await fetch(url);
@@ -422,6 +442,7 @@
 		}
 	   }
 	}
+
 	function play() {
         var audio = new Audio('alert.mp3');
         audio.play();
@@ -445,6 +466,38 @@
 
         myInterval = setInterval(tick, 1000);
     }
+
+    async function GetDistricts() {
+      console.log(document.getElementById("district").selectedIndex);
+      document.getElementById("pincode").value="";
+      console.log(document.getElementById("pincode").value)
+      var selectedDistrict = document.getElementById("district").selectedIndex;
+		let availabilityFound = false;
+		var url = new URL('https://cdn-api.co-vin.in/api/v2/admin/location/districts/17');
+		// the new url string
+		var response = await fetch(url);
+		let data = await response.json();
+		var centerr = data.districts;
+    let html = '';
+    console.log(data);
+      data.districts.forEach(element => {
+        html += `<option value="${element.district_id}"> ${element.district_name} </option>`
+                    });
+                    document.getElementById("district").innerHTML = html;
+                    document.getElementById("district").selectedIndex = selectedDistrict;
+
+	}
+  async function clearDistricts()
+  {
+    document.getElementById("district").selectedIndex = -1;
+  }
+
+  async function clearPin()
+  {
+    document.getElementById("pincode").value ="";
+  }
+
+
 	</script>
 	
 <body style="background-image: url(https://image.freepik.com/free-vector/abstract-medical-background-with-flat-icons-symbols-template-design-with-concept-idea-healthcare-technology-innovation-medicine-health-science-research_120542-503.jpg);">
@@ -455,8 +508,13 @@
 				<img src="vaccine.jpg" alt="Covid vaccine finder" class="img-responsive" />
 			</div>
 			<h1 style="text-align: center;color: #1d4e8c;font-family: serif">Vaccine Search</h1>
-			<input id="pincode" type="text" class="form-control"  placeholder="Pin Code" style="margin-bottom: 15px;
+			<input id="pincode" type="text" class="form-control"  onfocusout="clearDistricts()"  placeholder="Pin Code" style="margin-bottom: 15px;
 			"/>
+     <div class="form-group">
+      <select id="district" class="form-control form-field" onchange="clearPin()">
+        <option value="" disabled selected>Select your district</option>
+      </select>
+  </div>
 			<div class="row">
 				<div class="col-sd-6">
 			<button type="button" class="btn btn_choose_sent bg_btn_chose_1" style="margin:15px;background-color:#29a747">
